@@ -108,7 +108,7 @@ namespace Robust.Client
 
             IoCManager.Register<IEyeManager, EyeManager>();
 
-            IoCManager.Register<IPlacementManager, PlacementManager>();
+            IoCManager.Register<IEntityPlacementManager, EntityPlacementManager>();
             IoCManager.Register<IOverlayManager, OverlayManager>();
             IoCManager.Register<IOverlayManagerInternal, OverlayManager>();
             IoCManager.Register<IViewVariablesManager, ViewVariablesManager>();

@@ -21,7 +21,7 @@ namespace Robust.Client.UserInterface.CustomControls
 {
     public sealed class EntitySpawnWindow : SS14Window
     {
-        private readonly IPlacementManager placementManager;
+        private readonly IEntityPlacementManager _entityPlacementManager;
         private readonly IPrototypeManager prototypeManager;
         private readonly IResourceCache resourceCache;
 
@@ -54,6 +54,8 @@ namespace Robust.Client.UserInterface.CustomControls
             "AlignTileDense",
             "AlignWall",
             "AlignWallProper",
+            "AlignThirds",
+            "AlignLRHalf",
         };
 
         private EntitySpawnButton? SelectedButton;
@@ -61,11 +63,11 @@ namespace Robust.Client.UserInterface.CustomControls
 
         protected override Vector2? CustomSize => (250, 300);
 
-        public EntitySpawnWindow(IPlacementManager placementManager,
+        public EntitySpawnWindow(IEntityPlacementManager entityPlacementManager,
             IPrototypeManager prototypeManager,
             IResourceCache resourceCache)
         {
-            this.placementManager = placementManager;
+            this._entityPlacementManager = entityPlacementManager;
             this.prototypeManager = prototypeManager;
             this.resourceCache = resourceCache;
 
@@ -127,15 +129,15 @@ namespace Robust.Client.UserInterface.CustomControls
                 OverrideMenu.AddItem(initOpts[i], i);
             }
 
-            EraseButton.Pressed = placementManager.Eraser;
-            EraseButton.OnToggled += OnEraseButtonToggled;
+            //EraseButton.Pressed = entityPlacementManager.Eraser;
+            //EraseButton.OnToggled += OnEraseButtonToggled;
             OverrideMenu.OnItemSelected += OnOverrideMenuItemSelected;
             SearchBar.OnTextChanged += OnSearchBarTextChanged;
             ClearButton.OnPressed += OnClearButtonPressed;
 
             BuildEntityList();
 
-            this.placementManager.PlacementChanged += OnPlacementCanceled;
+            //this._entityPlacementManager.PlacementChanged += OnPlacementCanceled;
             SearchBar.GrabKeyboardFocus();
         }
 
@@ -152,10 +154,10 @@ namespace Robust.Client.UserInterface.CustomControls
 
             if (!disposing) return;
 
-            if(EraseButton.Pressed)
-                placementManager.Clear();
+            //if(EraseButton.Pressed)
+                //_entityPlacementManager.Clear();
 
-            placementManager.PlacementChanged -= OnPlacementCanceled;
+            //_entityPlacementManager.PlacementChanged -= OnPlacementCanceled;
         }
 
         private void OnSearchBarTextChanged(LineEdit.LineEditEventArgs args)
@@ -167,20 +169,6 @@ namespace Robust.Client.UserInterface.CustomControls
         private void OnOverrideMenuItemSelected(OptionButton.ItemSelectedEventArgs args)
         {
             OverrideMenu.SelectId(args.Id);
-
-            if (placementManager.CurrentMode != null)
-            {
-                var newObjInfo = new PlacementInformation
-                {
-                    PlacementOption = initOpts[args.Id],
-                    EntityType = placementManager.CurrentPermission!.EntityType,
-                    Range = 2,
-                    IsTile = placementManager.CurrentPermission.IsTile
-                };
-
-                placementManager.Clear();
-                placementManager.BeginPlacing(newObjInfo);
-            }
         }
 
         private void OnClearButtonPressed(BaseButton.ButtonEventArgs args)
@@ -191,7 +179,7 @@ namespace Robust.Client.UserInterface.CustomControls
 
         private void OnEraseButtonToggled(BaseButton.ButtonToggledEventArgs args)
         {
-            placementManager.ToggleEraser();
+            //_entityPlacementManager.ToggleEraser();
         }
 
         private void BuildEntityList(string? searchStr = null)
@@ -352,7 +340,7 @@ namespace Robust.Client.UserInterface.CustomControls
             {
                 SelectedButton = null;
                 SelectedPrototype = null;
-                placementManager.Clear();
+                //_entityPlacementManager.Clear();
                 return;
             }
             else if (SelectedButton != null)
@@ -372,7 +360,7 @@ namespace Robust.Client.UserInterface.CustomControls
                 IsTile = false
             };
 
-            placementManager.BeginPlacing(newObjInfo);
+            //_entityPlacementManager.BeginPlacing(newObjInfo);
 
             SelectedButton = item;
             SelectedPrototype = item.Prototype;

@@ -18,7 +18,7 @@ namespace Robust.Client.UserInterface.CustomControls
     public sealed class TileSpawnWindow : SS14Window
     {
         private readonly ITileDefinitionManager __tileDefinitionManager;
-        private readonly IPlacementManager _placementManager;
+        private readonly IEntityPlacementManager _entityPlacementManager;
         private readonly IResourceCache _resourceCache;
 
         private ItemList TileList;
@@ -31,11 +31,11 @@ namespace Robust.Client.UserInterface.CustomControls
 
         protected override Vector2? CustomSize => (300, 300);
 
-        public TileSpawnWindow(ITileDefinitionManager tileDefinitionManager, IPlacementManager placementManager,
+        public TileSpawnWindow(ITileDefinitionManager tileDefinitionManager, IEntityPlacementManager entityPlacementManager,
             IResourceCache resourceCache)
         {
             __tileDefinitionManager = tileDefinitionManager;
-            _placementManager = placementManager;
+            _entityPlacementManager = entityPlacementManager;
             _resourceCache = resourceCache;
 
             var vBox = new VBoxContainer();
@@ -56,8 +56,8 @@ namespace Robust.Client.UserInterface.CustomControls
             vBox.AddChild(TileList);
 
             BuildTileList();
-
-            _placementManager.PlacementChanged += OnPlacementCanceled;
+            //TODO: Tile placement manager
+            // _entityPlacementManager.PlacementChanged += OnPlacementCanceled;
 
             Title = "Place Tiles";
             SearchBar.GrabKeyboardFocus();
@@ -69,7 +69,8 @@ namespace Robust.Client.UserInterface.CustomControls
 
             if (disposing)
             {
-                _placementManager.PlacementChanged -= OnPlacementCanceled;
+                //TODO: Tile placement manager
+                //_entityPlacementManager.PlacementChanged -= OnPlacementCanceled;
             }
         }
 
@@ -132,8 +133,8 @@ namespace Robust.Client.UserInterface.CustomControls
                 Range = 400,
                 IsTile = true
             };
-
-            _placementManager.BeginPlacing(newObjInfo);
+            //TODO: Tile placement manager
+            //_entityPlacementManager.BeginPlacing(newObjInfo);
         }
 
         private void TileListOnOnItemDeselected(ItemList.ItemListDeselectedEventArgs args)
@@ -143,7 +144,8 @@ namespace Robust.Client.UserInterface.CustomControls
                 return;
             }
 
-            _placementManager.Clear();
+            //TODO: Tile placement manager
+            //_entityPlacementManager.Clear();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Robust.Client
         [Dependency] private readonly IClientConsole _console = default!;
         [Dependency] private readonly ITimerManager _timerManager = default!;
         [Dependency] private readonly IClientEntityManager _entityManager = default!;
-        [Dependency] private readonly IPlacementManager _placementManager = default!;
+        [Dependency] private readonly IEntityPlacementManager _entityPlacementManager = default!;
         [Dependency] private readonly IClientGameStateManager _gameStateManager = default!;
         [Dependency] private readonly IOverlayManagerInternal _overlayManager = default!;
         [Dependency] private readonly ILogManager _logManager = default!;
@@ -161,7 +161,7 @@ namespace Robust.Client
             _mapManager.Initialize();
             _entityManager.Initialize();
             _gameStateManager.Initialize();
-            _placementManager.Initialize();
+            _entityPlacementManager.Initialize();
             _viewVariablesManager.Initialize();
             _scriptClient.Initialize();
 
@@ -268,7 +268,7 @@ namespace Robust.Client
 
             if (_client.RunLevel >= ClientRunLevel.Connected)
             {
-                _placementManager.FrameUpdate(frameEventArgs);
+                _entityPlacementManager.FrameUpdate(frameEventArgs);
                 _entityManager.FrameUpdate(frameEventArgs.DeltaSeconds);
             }
 
