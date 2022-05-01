@@ -131,7 +131,7 @@ namespace Robust.Shared.Network
             var hasPubKey = !string.IsNullOrEmpty(pubKey);
             var authenticate = !string.IsNullOrEmpty(authToken);
 
-            var hwId = ImmutableArray.Create(HWId.Calc());
+            var hwId = ImmutableArray.Create(HWId.Calc(_config));
             var msgLogin = new MsgLoginStart
             {
                 UserName = userNameRequest,

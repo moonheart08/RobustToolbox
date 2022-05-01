@@ -194,6 +194,12 @@ namespace Robust.Shared
         public static readonly CVarDef<string> NetLidgrenAppIdentifier =
             CVarDef.Create("net.lidgren_app_identifier", "RobustToolbox");
 
+        /// <summary>
+        /// The last known HWID for this client.
+        /// </summary>
+        public static readonly CVarDef<string> LastKnownHwid =
+            CVarDef.Create("net.last_known_hwid", "", CVar.CLIENTONLY | CVar.ARCHIVE);
+
 #if DEBUG
         /// <summary>
         /// Add random fake network loss to all outgoing UDP network packets, as a ratio of how many packets to drop.
