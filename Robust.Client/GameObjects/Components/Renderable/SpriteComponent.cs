@@ -1251,7 +1251,8 @@ namespace Robust.Client.GameObjects
         public bool EnableDirectionOverride { get => _enableOverrideDirection; set => _enableOverrideDirection = value; }
 
         // Sprite rendering path
-        internal void Render(DrawingHandleWorld drawingHandle, Angle eyeRotation, in Angle worldRotation, in Vector2 worldPosition)
+        // WHY IS THIS PUBLIC *scream
+        public void Render(DrawingHandleWorld drawingHandle, Angle eyeRotation, in Angle worldRotation, in Vector2 worldPosition)
         {
             Direction? overrideDir = null;
             if (_enableOverrideDirection)
