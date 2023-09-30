@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Robust.Shared.Toolshed.Syntax;
+using Robust.Shared.Toolshed.Tasks;
 
 namespace Robust.Shared.Toolshed.Commands.Generic;
 
@@ -8,7 +9,7 @@ namespace Robust.Shared.Toolshed.Commands.Generic;
 public sealed class WhereCommand : ToolshedCommand
 {
     [CommandImplementation, TakesPipedTypeAsGeneric]
-    public IEnumerable<T> Where<T>(
+    public async IAsyncEnumerable<T> Where<T>(
             [CommandInvocationContext] IInvocationContext ctx,
             [PipedArgument] IEnumerable<T> input,
             [CommandArgument] Block<T, bool> check
@@ -16,13 +17,15 @@ public sealed class WhereCommand : ToolshedCommand
     {
         foreach (var i in input)
         {
-            var res = check.Invoke(i, ctx);
+            var res = await check.Invoke(i, ctx);
 
             if (ctx.GetErrors().Any())
                 yield break;
 
             if (res)
                 yield return i;
+
+            await ToolshedTaskUtils.YieldIterator();
         }
     }
 }

@@ -53,4 +53,13 @@ public sealed partial class ToolshedParserTest
             ParseCommand("f 100 iota map {iota sum emplace {f 2 pow $value}}");
         });
     }
+
+    [Test, TestOf(typeof(ValueRef<>))]
+    public async Task Bug_ValueRefNoParserError_08_27_2023()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            ParseCommand("val ICommonSession player:self");
+        });
+    }
 }

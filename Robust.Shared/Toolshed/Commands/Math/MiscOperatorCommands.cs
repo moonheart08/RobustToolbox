@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Robust.Shared.Toolshed.Syntax;
 
 namespace Robust.Shared.Toolshed.Commands.Math;
@@ -9,7 +10,7 @@ namespace Robust.Shared.Toolshed.Commands.Math;
 public sealed class DefaultIfNullCommand : ToolshedCommand
 {
     [CommandImplementation, TakesPipedTypeAsGeneric]
-    public TOut? DefaultIfNull<TOut, TIn>(
+    public ValueTask<TOut?> DefaultIfNull<TOut, TIn>(
             [CommandInvocationContext] IInvocationContext ctx,
             [PipedArgument] TIn? value,
             [CommandArgument] Block<TIn, TOut> follower

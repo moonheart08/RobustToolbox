@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Robust.Shared.Toolshed.Syntax;
+using Robust.Shared.Toolshed.Tasks;
 
 namespace Robust.Shared.Toolshed.Commands.Generic;
 
@@ -9,7 +10,7 @@ namespace Robust.Shared.Toolshed.Commands.Generic;
 public sealed class IterateCommand : ToolshedCommand
 {
     [CommandImplementation, TakesPipedTypeAsGeneric]
-    public IEnumerable<T>? Iterate<T>(
+    public async IAsyncEnumerable<T>? Iterate<T>(
             [CommandInvocationContext] IInvocationContext ctx,
             [PipedArgument] T value,
             [CommandArgument] Block<T, T> block,
@@ -20,10 +21,11 @@ public sealed class IterateCommand : ToolshedCommand
 
         for (var i = 0; i < iCap; i++)
         {
-            if (block.Invoke(value, ctx) is not { } v)
+            if (await block.Invoke(value, ctx) is not { } v)
                 break;
             value = v;
             yield return value;
+            await ToolshedTaskUtils.YieldIterator();
         }
     }
 }

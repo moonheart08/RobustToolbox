@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Robust.Shared.Maths;
 using Robust.Shared.Toolshed.Errors;
 using Robust.Shared.Utility;
@@ -62,11 +63,11 @@ public class ValueRef<T, TAuto>
 
     public bool LikelyConst => VarName is not null || HasValue;
 
-    public T? Evaluate(IInvocationContext ctx)
+    public ValueTask<T?> Evaluate(IInvocationContext ctx)
     {
         if (Value is not null && HasValue)
         {
-            return Value;
+            return new ValueTask<T?>(Value);
         }
         else if (VarName is not null)
         {
@@ -78,7 +79,7 @@ public class ValueRef<T, TAuto>
                 return default;
             }
 
-            return v;
+            return new ValueTask<T?>(v);
         }
         else if (InnerBlock is not null)
         {

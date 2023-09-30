@@ -46,7 +46,7 @@ public sealed class Block
         CommandRun = expr;
     }
 
-    public object? Invoke(object? input, IInvocationContext ctx)
+    public async ValueTask<object?> Invoke(object? input, IInvocationContext ctx)
     {
         return CommandRun.Invoke(input, ctx);
     }
@@ -86,7 +86,7 @@ public sealed class Block<T>
         CommandRun = expr;
     }
 
-    public T? Invoke(object? input, IInvocationContext ctx)
+    public async ValueTask<T?> Invoke(object? input, IInvocationContext ctx)
     {
         return CommandRun.Invoke(input, ctx);
     }
@@ -123,21 +123,8 @@ public sealed class Block<TIn, TOut>
         CommandRun = expr;
     }
 
-    public TOut? Invoke(TIn? input, IInvocationContext ctx)
+    public async ValueTask<TOut?> Invoke(TIn? input, IInvocationContext ctx)
     {
         return CommandRun.Invoke(input, ctx);
     }
-}
-
-
-public record struct MissingClosingBrace() : IConError
-{
-    public FormattedMessage DescribeInner()
-    {
-        return FormattedMessage.FromMarkup("Expected a closing brace.");
-    }
-
-    public string? Expression { get; set; }
-    public Vector2i? IssueSpan { get; set; }
-    public StackTrace? Trace { get; set; }
 }

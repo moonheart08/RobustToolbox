@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Robust.Shared.Players;
 using Robust.Shared.Toolshed.Errors;
 using Robust.Shared.Toolshed.Syntax;
+using Robust.Shared.Toolshed.Tasks;
 
 namespace Robust.Shared.Toolshed.Commands.Generic;
 
@@ -10,12 +13,27 @@ namespace Robust.Shared.Toolshed.Commands.Generic;
 public sealed class ReduceCommand : ToolshedCommand
 {
     [CommandImplementation, TakesPipedTypeAsGeneric]
-    public T Reduce<T>(
+    public async ValueTask<T> Reduce<T>(
         [CommandInvocationContext] IInvocationContext ctx,
         [PipedArgument] IEnumerable<T> input,
         [CommandArgument] Block<T, T> reducer
     )
-        => input.Aggregate((x, next) => reducer.Invoke(x, new ReduceContext<T>(ctx, next))!);
+    {
+        using IEnumerator<T> enumerator = input.GetEnumerator();
+
+        if (!enumerator.MoveNext())
+            throw new InvalidOperationException("No elements in input");
+
+        var reduced = enumerator.Current;
+
+        while (enumerator.MoveNext())
+        {
+            reduced = await reducer.Invoke(reduced, new ReduceContext<T>(ctx, enumerator.Current));
+            await ToolshedTaskUtils.YieldIterator();
+        }
+
+        return reduced!;
+    }
 }
 
 internal record ReduceContext<T>(IInvocationContext Inner, T Value) : IInvocationContext
